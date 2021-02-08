@@ -1,5 +1,5 @@
 html {
-  background-image: url(logo-red.png), url(bg-wave.png);
+  background-image: url(../images/logo-red.png), url(../images/bg-wave.png);
   background-size: 140px auto, contain;
   background-position: right 50px top 50px, 0% 22%;
   background-repeat: no-repeat, no-repeat;

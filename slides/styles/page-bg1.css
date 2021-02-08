@@ -1,5 +1,5 @@
 html {
-  background-image: url(logo-white.png), url(bg-frame.png);
+  background-image: url(../images/logo-white.png), url(../images/bg-frame.png);
   background-size: 140px auto, cover;
   background-position: right 50px top 50px, center;
   background-repeat: no-repeat, no-repeat;
