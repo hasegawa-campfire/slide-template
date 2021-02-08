@@ -12,17 +12,23 @@ let currentPage = 0
 let $currentSlide = null
 let noteWindow = null
 
+function isBlank(iframe) {
+  return iframe.contentWindow.location.href === 'about:blank'
+}
+
 const $slides = Array.from({ length: pageTotal }).map((_, i) => {
   const el = document.createElement('iframe')
   el.className = 'slide'
   el.addEventListener('load', () => {
-    listenSlideEvents(el.contentWindow)
-    el.$note = $('.slide-note', el.contentWindow.document)
-    el.$note?.remove()
-    el.contentWindow.document.body.style.setProperty('--page', `'${i + 1}'`)
+    if (!isBlank(el)) {
+      listenSlideEvents(el.contentWindow)
+      el.$note = $('.slide-note', el.contentWindow.document)
+      el.$note?.remove()
+      el.contentWindow.document.body.style.setProperty('--page', `'${i + 1}'`)
+    }
   })
-  el.load = () => !el.src && (el.src = getPageUrl(i + 1))
-  el.loaded = new Promise(r => el.addEventListener('load', () => el.src && r()))
+  el.load = () => isBlank(el) && el.contentWindow.location.replace(getPageUrl(i + 1))
+  el.loaded = new Promise(r => el.addEventListener('load', () => !isBlank(el) && r()))
   return el
 })
 

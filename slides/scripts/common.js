@@ -83,14 +83,15 @@ for (const $temp of document.querySelectorAll('template.playground')) {
   }
 
   function updatePreview() {
-    URL.revokeObjectURL($preview.src)
+    URL.revokeObjectURL($preview.contentWindow.location.href)
     const html = `
       ${suffixPreview}
       <style>${$codes[1].textContent}</style>
       ${$codes[0].textContent}
       <script>${$codes[2].textContent}</script>
     `
-    $preview.src = URL.createObjectURL(new Blob([fixedUrl(html)], { type: 'text/html' }))
+    const url = URL.createObjectURL(new Blob([fixedUrl(html)], { type: 'text/html' }))
+    $preview.contentWindow.location.replace(url)
   }
 
   function fixedUrl(html) {
