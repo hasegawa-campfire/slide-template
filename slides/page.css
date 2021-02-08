@@ -1,0 +1,47 @@
+@import url(common.css);
+@import url(playground.css);
+
+body {
+  margin: 150px 50px 100px;
+  padding: 0;
+}
+
+body::before {
+  content: '2021@CAMPFIRE.inc';
+  display: block;
+  position: absolute;
+  bottom: 50px;
+  right: 90px;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--color-text-light);
+}
+
+body::after {
+  content: var(--page);
+  display: block;
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  font-size: 20px;
+  line-height: 20px;
+  color: var(--color-text-light);
+}
+
+h1 {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  color: var(--color-red);
+  margin: 0;
+  font-size: 28px;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  margin-top: 20px;
+  height: 4px;
+  background-image: var(--gradient-linear);
+  border-radius: 999px;
+}

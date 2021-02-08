@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Open+Sans&display=swap');
+
+:root {
+  --color-yellow: #fac75b;
+  --color-red: #ef4846;
+  --gradient-linear: linear-gradient(135deg, var(--color-yellow), var(--color-red));
+  --color-text: #4d4a4a;
+  --color-text-invert: #fff;
+  --color-text-light: #b3b3b3;
+  --color-bg-light: #f3f3f3f3;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  color: var(--color-text);
+  font-family: 'Open Sans', 'Noto Sans JP', sans-serif;
+  font-size: 48px;
+  line-height: 1.4;
+  overflow: hidden;
+  cursor: default;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+}

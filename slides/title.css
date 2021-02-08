@@ -1,0 +1,21 @@
+@import url(common.css);
+
+html {
+  display: flex;
+  align-items: center;
+  background-image: var(--gradient-linear);
+}
+
+body {
+  margin: 100px;
+  color: var(--color-text-invert);
+  font-weight: bold;
+  text-align: center;
+  width: 100vw;
+  height: max-content;
+  overflow: hidden;
+}
+
+.left {
+  text-align: left;
+}

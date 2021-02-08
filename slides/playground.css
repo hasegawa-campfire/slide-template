@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto+Mono&display=swap');
+
+.playground {
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr;
+  grid-template-rows: auto 1fr;
+  padding: 32px;
+  background-color: #fff;
+  height: 450px;
+  box-shadow: 0 0 30px #00000028;
+}
+
+.preview {
+  grid-row: span 2;
+  align-self: stretch;
+  display: block;
+  width: 500px;
+  margin-right: 32px;
+  border: none;
+  resize: horizontal;
+  border-right: var(--color-bg-light) 4px dashed;
+}
+
+.tab {
+  font-size: 24px;
+  padding: 4px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: var(--color-bg-light);
+}
+
+.tab + .tab {
+  margin-left: 16px;
+}
+
+.tab.active {
+  background-image: var(--gradient-linear);
+  color: var(--color-text-invert);
+}
+
+code {
+  grid-column: span 4;
+  display: block;
+  margin-top: 32px;
+  overflow: auto;
+  white-space: pre;
+  font-family: 'Roboto Mono', 'Noto Sans JP', monospace;
+  font-size: 25px;
+  line-height: 1.4;
+  outline: none;
+  cursor: text;
+}
+
+code:not(.active) {
+  display: none;
+}

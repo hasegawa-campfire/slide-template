@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<link rel="icon" href="favicon.png" type="image/png">
+
+<div class="slides"></div>
+
+<script type="module">
+import { title, pageTotal, getPageUrl, pageWidth, pageHeight } from './config.js'
+
+const $ = (sel, el = document) => el.querySelector(sel)
+
+let currentPage = 0
+let $currentSlide = null
+let noteWindow = null
+
+const $slides = Array.from({ length: pageTotal }).map((_, i) => {
+  const el = document.createElement('iframe')
+  el.className = 'slide'
+  el.addEventListener('load', () => {
+    listenSlideEvents(el.contentWindow)
+    el.$note = $('.slide-note', el.contentWindow.document)
+    el.$note?.remove()
+    el.contentWindow.document.body.style.setProperty('--page', `'${i + 1}'`)
+  })
+  el.load = () => !el.src && (el.src = getPageUrl(i + 1))
+  el.loaded = new Promise(r => el.addEventListener('load', () => el.src && r()))
+  return el
+})
+
+async function nextPage() {
+  await $currentSlide.loaded
+  setPage(currentPage + 1)
+}
+
+async function prevPage() {
+  await $currentSlide.loaded
+  setPage(currentPage - 1)
+}
+
+function updateNote() {
+  if (noteWindow) {
+    noteWindow.document.body.innerHTML = ''
+    if ($currentSlide.$note) {
+      noteWindow.document.body.append($currentSlide.$note)
+    }
+  }
+}
+
+async function setPage(value) {
+  value = Math.min(Math.max(value, 1), pageTotal)
+  if (value === currentPage) return
+
+  $currentSlide?.contentWindow?.dispatchEvent(new CustomEvent('slide-fin'))
+
+  currentPage = value
+  $currentSlide = $slides[currentPage - 1]
+
+  $currentSlide.load()
+  $slides[currentPage]?.load()
+  $slides[currentPage - 2]?.load()
+  await $currentSlide.loaded
+  $currentSlide.contentWindow.dispatchEvent(new CustomEvent('slide-init'))
+  updateNote()
+
+  for (const el of $slides) {
+    el.classList.toggle('current', el === $currentSlide)
+  }
+
+  const url = new URL(location.href)
+  if (currentPage > 1) {
+    url.searchParams.set('page', currentPage)
+  } else {
+    url.searchParams.delete('page')
+  }
+  history.replaceState(history.state, '', url.href)
+}
+
+function listenSlideEvents(target) {
+  target.addEventListener('keydown', (e) => {
+    if (e.target.closest('code,input,textarea')) return
+    if (e.key === 'ArrowLeft') prevPage()
+    if (e.key === 'ArrowRight') nextPage()
+    if (e.key === 'n' && (!noteWindow || noteWindow.closed)) {
+      noteWindow = open('', 'slide-note', 'width=500,height=600')
+      noteWindow.document.title = `note - ${title}`
+      noteWindow.document.head.insertAdjacentHTML('beforeend',`
+        <style>
+          .slide-note {
+            white-space: pre-line;
+            text-indent: 1em each-line;
+          }
+          .slide-note::first-line {
+            font-size: 0;
+          }
+        </style>
+      `)
+      listenSlideEvents(noteWindow)
+      updateNote()
+    }
+  })
+}
+
+function resize() {
+  const scale = (window.innerWidth / window.innerHeight > pageWidth / pageHeight)
+    ? window.innerHeight / pageHeight
+    : window.innerWidth / pageWidth
+    $('.slides').style.transform = `translate(-50%, -50%) scale(${scale})`
+}
+
+$('.slides').style.width = `${pageWidth}px`
+$('.slides').style.height = `${pageHeight}px`
+$('.slides').append(...$slides)
+window.addEventListener('resize', resize)
+window.addEventListener('beforeunload', () => noteWindow?.close())
+
+document.title = title
+listenSlideEvents(window)
+setPage(new URLSearchParams(location.search).get('page') || 1)
+resize()
+</script>
+
+<style>
+html {
+  background-color: #222;
+}
+
+body {
+  cursor: default;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.slides {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-color: #fff;
+}
+
+.slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.slide:not(.current) {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
