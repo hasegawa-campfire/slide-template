@@ -47,9 +47,9 @@ for (const $temp of document.querySelectorAll('template.playground')) {
   $temp.insertAdjacentHTML('afterend', `
     <div class="playground">
       <iframe class="preview"></iframe>
-      <div class="tab">html</div>
-      <div class="tab">css</div>
-      <div class="tab">script</div>
+      <div class="tab">HTML</div>
+      <div class="tab">CSS</div>
+      <div class="tab">JavaScript</div>
       <code contenteditable spellcheck="false"></code>
       <code contenteditable spellcheck="false"></code>
       <code contenteditable spellcheck="false"></code>
